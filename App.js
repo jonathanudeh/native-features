@@ -36,7 +36,7 @@ export default function App() {
             })}
           />
           <Stack.Screen
-            name="AddPlaces"
+            name="AddPlace"
             component={AddPlace}
             options={{
               title: "Add a new Place",
