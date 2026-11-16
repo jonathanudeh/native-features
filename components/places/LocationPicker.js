@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
-import { Alert, Image, StyleSheet, Text, View } from "react-native";
+import { Alert, StyleSheet, Text, View } from "react-native";
+import MapView, { Marker } from "react-native-maps";
 import OutlinedButton from "../UI/OutlinedButton";
 import { Colors } from "../../constants/colors";
 import {
@@ -7,7 +8,6 @@ import {
   PermissionStatus,
   useForegroundPermissions,
 } from "expo-location";
-import { getMapPreview } from "../../utils/location";
 import {
   useIsFocused,
   useNavigation,
@@ -76,10 +76,30 @@ function LocationPicker() {
   let locationPreview = <Text>No location chosen yet.</Text>;
 
   if (pickedLocation) {
-    const locationUri = getMapPreview(pickedLocation.lat, pickedLocation.lng);
-
     locationPreview = (
-      <Image source={{ uri: locationUri }} style={styles.image} />
+      <MapView
+        style={styles.map}
+        region={{
+          latitude: pickedLocation.lat,
+          longitude: pickedLocation.lng,
+          latitudeDelta: 0.02,
+          longitudeDelta: 0.01,
+        }}
+        pointerEvents="none"
+        scrollEnabled={false}
+        zoomEnabled={false}
+        rotateEnabled={false}
+        pitchEnabled={false}
+        toolbarEnabled={false}
+        liteMode
+      >
+        <Marker
+          coordinate={{
+            latitude: pickedLocation.lat,
+            longitude: pickedLocation.lng,
+          }}
+        />
+      </MapView>
     );
   }
 
@@ -109,13 +129,14 @@ const styles = StyleSheet.create({
     alignItems: "center",
     backgroundColor: Colors.primary100,
     borderRadius: 4,
+    overflow: "hidden",
   },
   actions: {
     flexDirection: "row",
     justifyContent: "space-around",
     alignItems: "center",
   },
-  image: {
+  map: {
     width: "100%",
     height: "100%",
   },
