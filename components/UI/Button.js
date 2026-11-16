@@ -22,6 +22,7 @@ const styles = StyleSheet.create({
     marginVertical: 12,
     backgroundColor: Colors.primary800,
     elevation: 2,
+    shadowColor: "black",
     shadowOpacity: 0.15,
     shadowOffset: { width: 1, height: 1 },
     shadowRadius: 2,
