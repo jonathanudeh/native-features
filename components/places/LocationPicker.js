@@ -1,12 +1,65 @@
-import { StyleSheet, Text, View } from "react-native";
+import { useState } from "react";
+import { Alert, Image, StyleSheet, Text, View } from "react-native";
 import OutlinedButton from "../UI/OutlinedButton";
 import { Colors } from "../../constants/colors";
+import {
+  getCurrentPositionAsync,
+  PermissionStatus,
+  useForegroundPermissions,
+} from "expo-location";
+import { getMapPreview } from "../../utils/location";
 
 function LocationPicker() {
-  function getLocationHandler() {}
+  const [pickedLocation, setPickedLocation] = useState();
+  const [locationPermissionInformation, requestPermission] =
+    useForegroundPermissions();
+
+  async function verifyPermissions() {
+    if (
+      locationPermissionInformation.status === PermissionStatus.UNDETERMINED
+    ) {
+      const permissionResponse = await requestPermission();
+
+      return permissionResponse.granted;
+    }
+
+    if (locationPermissionInformation.status === PermissionStatus.DENIED) {
+      Alert.alert(
+        "Insufficient Permissions!",
+        "You need to grant location permissions to use this app.",
+      );
+
+      return false;
+    }
+
+    return true;
+  }
+
+  async function getLocationHandler() {
+    const hasPermission = await verifyPermissions();
+
+    if (!hasPermission) {
+      return;
+    }
+
+    const location = await getCurrentPositionAsync();
+    setPickedLocation({
+      lat: location.coords.latitude,
+      lng: location.coords.longitude,
+    });
+  }
+
   function pickOnMapHandler() {}
 
   let locationPreview = <Text>No location chosen yet.</Text>;
+
+  if (pickedLocation) {
+    const locationUri = getMapPreview(pickedLocation.lat, pickedLocation.lng);
+
+    locationPreview = (
+      <Image source={{ uri: locationUri }} style={styles.image} />
+    );
+  }
 
   return (
     <View>
@@ -39,5 +92,9 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-around",
     alignItems: "center",
+  },
+  image: {
+    width: "100%",
+    height: "100%",
   },
 });
