@@ -52,3 +52,22 @@ export async function fetchPlaces() {
       ),
   );
 }
+
+export async function fetchPlaceDetails(id) {
+  const database = await databasePromise;
+  const row = await database.getFirstAsync(
+    `SELECT * FROM places WHERE id = ?`,
+    [id],
+  );
+
+  if (!row) {
+    return null;
+  }
+
+  return new Place(
+    row.title,
+    row.imageUri,
+    { address: row.address, lat: row.lat, lng: row.lng },
+    row.id,
+  );
+}
