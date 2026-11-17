@@ -26,13 +26,17 @@ function LocationPicker({ onPickLocation }) {
     useForegroundPermissions();
 
   useEffect(() => {
-    if (isFocused && route.params) {
-      const mapPickedLocation = {
-        lat: route.params.pickedLocation.lat,
-        lng: route.params.pickedLocation.lng,
-      };
-      setPickedLocation(mapPickedLocation);
+    async function handleRouteParamsLocation() {
+      if (isFocused && route.params) {
+        const mapPickedLocation = {
+          lat: route.params.pickedLocation.lat,
+          lng: route.params.pickedLocation.lng,
+        };
+        setPickedLocation(mapPickedLocation);
+      }
     }
+
+    handleRouteParamsLocation();
   }, [route, isFocused]);
 
   useEffect(() => {
