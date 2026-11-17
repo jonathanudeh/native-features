@@ -8,7 +8,9 @@ import IconButton from "./components/UI/IconButton";
 import { Colors } from "./constants/colors";
 import { useEffect, useState } from "react";
 import { init } from "./utils/database";
-import AppLoading from "expo-app-loading";
+import * as SplashScreen from "expo-splash-screen";
+
+SplashScreen.preventAutoHideAsync();
 
 const Stack = createNativeStackNavigator();
 
@@ -25,8 +27,14 @@ export default function App() {
       });
   }, []);
 
+  useEffect(() => {
+    if (dbInitialized) {
+      SplashScreen.hideAsync();
+    }
+  }, [dbInitialized]);
+
   if (!dbInitialized) {
-    return <AppLoading />;
+    return null;
   }
 
   return (

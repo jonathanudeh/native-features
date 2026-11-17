@@ -29,7 +29,7 @@ function Map({ navigation }) {
       return;
     }
 
-    navigation.navigate("AddPlace", {
+    navigation.popTo("AddPlace", {
       pickedLocation: selectedLocation,
     });
   }, [navigation, selectedLocation]);

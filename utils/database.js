@@ -21,3 +21,24 @@ export async function init() {
     throw err;
   }
 }
+
+export async function insertPlace(place) {
+  const database = await databasePromise;
+
+  return database.runAsync(
+    `INSERT INTO places (title, imageUri, address, lat, lng) VALUES (?, ?, ?, ?, ?)`,
+    [
+      place.title,
+      place.imageUri,
+      place.address,
+      place.location.lat,
+      place.location.lng,
+    ],
+  );
+}
+
+export async function fetchPlaces() {
+  const database = await databasePromise;
+
+  return database.getAllAsync(`SELECT * FROM places`);
+}
